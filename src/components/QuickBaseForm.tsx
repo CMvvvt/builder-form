@@ -147,7 +147,7 @@ function QuickBaseForm(props: PropsType) {
                 type="text"
                 value={addChoice}
                 onChange={(e) => setAddChoice(e.target.value)}
-                size={15}
+                size={20}
               />
               <Button className="btn-sm button" onClick={addChoiceHandler}>
                 Add
@@ -159,7 +159,7 @@ function QuickBaseForm(props: PropsType) {
                 value={removeChoice}
                 placeholder="select to remove"
                 disabled
-                size={15}
+                size={20}
               />
               <Button
                 className="btn-sm button"
