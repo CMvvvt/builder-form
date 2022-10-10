@@ -11,3 +11,38 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.App {
+  margin: auto;
+  width: 1000px;
+  padding: 1rem;
+}
+
+.builder {
+  margin-top: 100px;
+  margin-left: 300px;
+}
+
+.flex-layout {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.type {
+  display: flex;
+  justify-content: space-between;
+}
+
+.type input {
+  margin-right: 5px;
+}
+
+.custom-input {
+  height: 30px;
+  width: 100%;
+}
+
+.button {
+  width: 70px;
+}
