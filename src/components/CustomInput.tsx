@@ -7,8 +7,7 @@ type InputProps = {
   input?: React.ReactElement;
 };
 
-function CustomInput(props: InputProps) {
-  const { label, value, onChange, input } = props;
+function CustomInput({ label, value, onChange, input }: InputProps) {
   return (
     <div className="row align-items-center mb-3">
       <div className="col-3">

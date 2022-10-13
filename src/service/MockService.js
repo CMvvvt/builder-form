@@ -18,13 +18,13 @@ var FieldService = {
     };
   },
   saveField: function (fieldJson) {
-    console.log('Form Submitted', fieldJson);
+    console.log('JSON Submitted: \n', fieldJson);
     axios
       .post('http://www.mocky.io/v2/566061f21200008e3aabd919', {
         fieldJson,
       })
       .then((res) => {
-        console.log(res);
+        console.log('Result: ', res);
       })
       .catch((error) => {
         console.log(error);

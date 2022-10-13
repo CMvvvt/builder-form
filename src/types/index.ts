@@ -5,3 +5,11 @@ export interface FormData {
   displayAlpha: boolean;
   default: string;
 }
+
+export const initialFormData = {
+  label: '',
+  required: false,
+  choices: [],
+  displayAlpha: false,
+  default: '',
+};

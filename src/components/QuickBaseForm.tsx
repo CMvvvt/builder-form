@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
 import CustomInput from './CustomInput';
-import { FormData } from '../types/index';
+import { FormData, initialFormData } from '../types/index';
 import FieldService from '../service/MockService';
 import '../index.css';
 
@@ -20,10 +20,10 @@ function QuickBaseForm(props: PropsType) {
   } = formData;
 
   const [addChoice, setAddChoice] = React.useState('');
+  const [removeChoice, setRemoveChoice] = React.useState('');
   const [displayedChoices, setDisplayedChoices] = React.useState(
     displayAlpha ? [...choices].sort() : choices
   );
-  const [removeChoice, setRemoveChoice] = React.useState('');
 
   const makeOption = (value: string, index: number) => {
     return (
@@ -35,21 +35,23 @@ function QuickBaseForm(props: PropsType) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     // handle validation of Label manually
     if (label === '') {
       alert('Lable cannot be empty!');
       return;
     }
-
     const data = formData;
-
     // handle submit when defualt value is not in choices
     if (!choices.includes(defaultChoice)) {
-      setDisplayedChoices([...displayedChoices, defaultChoice]);
+      setDisplayedChoices(
+        displayAlpha
+          ? [...choices, defaultChoice].sort()
+          : [...choices, defaultChoice]
+      );
       setFormData({ ...formData, choices: [...choices, defaultChoice] });
       data.choices.push(defaultChoice);
     }
+    console.log('Data Submitted:', data);
     FieldService.saveField(JSON.stringify(data));
   };
 
@@ -69,9 +71,10 @@ function QuickBaseForm(props: PropsType) {
     }
 
     setFormData({ ...formData, choices: [...choices, addChoice] });
-    const choicesToDisplay = [...displayedChoices, addChoice];
     setDisplayedChoices(
-      displayAlpha ? choicesToDisplay.sort() : choicesToDisplay
+      displayAlpha
+        ? [...displayedChoices, addChoice].sort()
+        : [...displayedChoices, addChoice]
     );
     setAddChoice('');
   };
@@ -86,13 +89,7 @@ function QuickBaseForm(props: PropsType) {
   };
 
   const clearForm = () => {
-    setFormData({
-      label: '',
-      required: false,
-      choices: [],
-      displayAlpha: false,
-      default: '',
-    });
+    setFormData(initialFormData);
     setDisplayedChoices([]);
     setAddChoice('');
     setRemoveChoice('');
@@ -183,6 +180,9 @@ function QuickBaseForm(props: PropsType) {
                 ...formData,
                 displayAlpha: e.target.value === 'true',
               });
+              console.log("I'm toggling order!!!");
+              console.log('Here is choices', choices);
+
               e.target.value === 'false'
                 ? setDisplayedChoices(choices)
                 : setDisplayedChoices([...choices].sort());
