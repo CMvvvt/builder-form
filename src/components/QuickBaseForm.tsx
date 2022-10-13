@@ -17,6 +17,7 @@ function QuickBaseForm(props: PropsType) {
     default: defaultChoice,
     displayAlpha,
     choices,
+    isMulti,
   } = formData;
 
   const [addChoice, setAddChoice] = React.useState('');
@@ -33,8 +34,8 @@ function QuickBaseForm(props: PropsType) {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const submitFormHandler = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     // handle validation of Label manually
     if (label === '') {
       alert('Lable cannot be empty!');
@@ -82,48 +83,87 @@ function QuickBaseForm(props: PropsType) {
   const removeChoiceHandler = () => {
     setFormData({
       ...formData,
-      choices: choices.filter((e) => e !== removeChoice),
+      choices: choices.filter((choice) => choice !== removeChoice),
     });
-    setDisplayedChoices(displayedChoices.filter((e) => e !== removeChoice));
+    setDisplayedChoices(
+      displayedChoices.filter((choice) => choice !== removeChoice)
+    );
     setRemoveChoice('');
   };
 
-  const clearForm = () => {
+  const changeOrderHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormData({
+      ...formData,
+      displayAlpha: event.target.value === 'true',
+    });
+    event.target.value === 'false'
+      ? setDisplayedChoices(choices)
+      : setDisplayedChoices([...choices].sort());
+  };
+
+  const clearFormHandler = () => {
     setFormData(initialFormData);
     setDisplayedChoices([]);
     setAddChoice('');
     setRemoveChoice('');
   };
 
+  const cancelFormHandler = () => {
+    localStorage.clear();
+    window.location.reload();
+  };
+
+  // store form data in Localstorage if changes occur
+  React.useEffect(() => {
+    localStorage.setItem('formData', JSON.stringify(formData));
+  }, [formData]);
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={submitFormHandler}>
       <CustomInput
         label="Label"
         value={label}
-        onChange={(e) => setFormData({ ...formData, label: e.target.value })}
+        onChange={(event) =>
+          setFormData({ ...formData, label: event.target.value })
+        }
       />
       <CustomInput
         label="Type"
         input={
           <div className="type">
-            <span>Multi-select </span>
-            <div>
-              <input
-                type="checkbox"
-                checked={required}
-                onChange={() =>
-                  setFormData({ ...formData, required: !required })
-                }
-              />
-              <label>A value is required</label>
-            </div>
+            <select
+              value={isMulti.toString()}
+              onChange={(e) => {
+                setFormData({
+                  ...formData,
+                  isMulti: e.target.value === 'true',
+                });
+              }}
+            >
+              <option value="false">Single-select</option>
+              <option value="true">Multi-select</option>
+            </select>
+            {isMulti && (
+              <div>
+                <input
+                  type="checkbox"
+                  checked={required}
+                  onChange={() =>
+                    setFormData({ ...formData, required: !required })
+                  }
+                />
+                <label>A value is required</label>
+              </div>
+            )}
           </div>
         }
       />
       <CustomInput
         label="Default Value"
         value={defaultChoice}
-        onChange={(e) => setFormData({ ...formData, default: e.target.value })}
+        onChange={(event) =>
+          setFormData({ ...formData, default: event.target.value })
+        }
       />
       <CustomInput
         label="Choice"
@@ -132,8 +172,8 @@ function QuickBaseForm(props: PropsType) {
             <select
               multiple
               value={[removeChoice]}
-              onChange={(e) => {
-                setRemoveChoice(e.target.value);
+              onChange={(event) => {
+                setRemoveChoice(event.target.value);
               }}
               style={{ height: '150px', width: '100%' }}
             >
@@ -143,7 +183,7 @@ function QuickBaseForm(props: PropsType) {
               <input
                 type="text"
                 value={addChoice}
-                onChange={(e) => setAddChoice(e.target.value)}
+                onChange={(event) => setAddChoice(event.target.value)}
                 size={20}
               />
               <Button className="btn-sm button" onClick={addChoiceHandler}>
@@ -175,18 +215,7 @@ function QuickBaseForm(props: PropsType) {
         input={
           <select
             value={displayAlpha.toString()}
-            onChange={(e) => {
-              setFormData({
-                ...formData,
-                displayAlpha: e.target.value === 'true',
-              });
-              console.log("I'm toggling order!!!");
-              console.log('Here is choices', choices);
-
-              e.target.value === 'false'
-                ? setDisplayedChoices(choices)
-                : setDisplayedChoices([...choices].sort());
-            }}
+            onChange={changeOrderHandler}
             className="custom-input"
           >
             <option value="true">Display choices in Alphabetical</option>
@@ -200,10 +229,14 @@ function QuickBaseForm(props: PropsType) {
           <Button variant="success" type="submit" className="btn-sm button">
             Save
           </Button>
-          <Button className="btn-sm button" onClick={clearForm}>
+          <Button className="btn-sm button" onClick={clearFormHandler}>
             Clear
           </Button>
-          <Button variant="secondary" className="btn-sm button">
+          <Button
+            variant="secondary"
+            className="btn-sm button"
+            onClick={cancelFormHandler}
+          >
             Cancel
           </Button>
         </div>

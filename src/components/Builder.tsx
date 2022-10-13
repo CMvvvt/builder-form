@@ -6,7 +6,11 @@ import { useEffect, useState } from 'react';
 function Builder() {
   const [formData, setFormData] = useState<FormData>();
   useEffect(() => {
-    setFormData(FieldService.getField());
+    setFormData(
+      localStorage.getItem('formData') !== null
+        ? JSON.parse(localStorage.getItem('formData') as string)
+        : FieldService.getField()
+    );
   }, []);
 
   return (

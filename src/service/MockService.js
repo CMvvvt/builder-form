@@ -15,6 +15,7 @@ var FieldService = {
       ],
       displayAlpha: true,
       default: 'North America',
+      isMulti: true,
     };
   },
   saveField: function (fieldJson) {

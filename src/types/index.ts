@@ -4,6 +4,7 @@ export interface FormData {
   choices: string[];
   displayAlpha: boolean;
   default: string;
+  isMulti: boolean;
 }
 
 export const initialFormData = {
@@ -12,4 +13,5 @@ export const initialFormData = {
   choices: [],
   displayAlpha: false,
   default: '',
+  isMulti: true,
 };

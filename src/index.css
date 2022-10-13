@@ -20,7 +20,7 @@ code {
 
 .builder {
   margin-top: 100px;
-  margin-left: 300px;
+  margin-left: 200px;
 }
 
 .flex-layout {
@@ -32,10 +32,6 @@ code {
 .type {
   display: flex;
   justify-content: space-between;
-}
-
-.type input {
-  margin-right: 5px;
 }
 
 .custom-input {
